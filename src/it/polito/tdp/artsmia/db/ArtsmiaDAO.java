@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import it.polito.tdp.artsmia.model.ArtObject;
@@ -36,6 +37,32 @@ public class ArtsmiaDAO {
 			return result;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public List<Integer> getAnni() {
+		String sql = "SELECT DISTINCT  begin " + 
+				"FROM exhibitions " + 
+				"ORDER BY begin ASC ";
+
+		List<Integer> result = new LinkedList<>();
+
+		Connection conn = DBConnect.getConnection();
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+
+			ResultSet res = st.executeQuery();
+
+			while (res.next()) {
+				     result.add(res.getInt("begin"));
+				}
+
+			conn.close();
+			return result;
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
