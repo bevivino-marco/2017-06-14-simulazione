@@ -22,11 +22,13 @@ public class Simulazione {
     ////Parametri della simulazione
 		private List <Esposizioni> esposizioni;
 		private int N_STDENTI ;
+		private int numero;
 		//Valori in output
 		private List <Studente> listaS;
 		
 	public void init(SimpleDirectedGraph<Integer, DefaultEdge> grafo, List <Esposizioni> esposizioni, int n) {
 			//ricevo i parametri
+		    this.numero=0;
 		    this.esposizioni=esposizioni;
 			this.grafo = grafo;
 			this.N_STDENTI=n;
@@ -37,7 +39,7 @@ public class Simulazione {
 			for (int i = 0; i<this.N_STDENTI;i++) {
 				Studente s = new Studente (i);
 				listaS.add(s);
-				Evento e =new Evento(s, esposizioni.get(0));
+				Evento e =new Evento(s, esposizioni.get(0),numero++);
 				queue.add(e);
 				
 			}
@@ -53,10 +55,29 @@ public class Simulazione {
 			Studente s = e.getStudente();
 			Esposizioni esp = e.getE();
 			s.visita(esp);
-			List<Integer> l = Graphs.successorListOf(this.grafo, e.getStudente().getId());
+			List <Integer> l = new LinkedList <Integer>();
+			l.addAll(Graphs.successorListOf(grafo, esp.getId()));
 			if (l.size()>0) {
-			Esposizioni daVisitare = null;
-			/**/
+				Esposizioni daVisitare=null;
+				int dv = l.get((int)(Math.random()*10));
+				for (Esposizioni es: esposizioni) {
+					if (es.getId()==dv) {
+						daVisitare = es;
+					}
+				}
+				if (daVisitare!= null) {
+					this.queue.add(new Evento(s,daVisitare, numero++));
+				}
+			}
+			/*System.out.println(e.getStudente().getId()+"visita "+ e.getE()+"\n");
+			Studente s = e.getStudente();
+			Esposizioni esp = e.getE();
+			s.visita(esp);
+			List<Integer> l;
+			try {
+			 l= Graphs.successorListOf(this.grafo, e.getStudente().getId());
+			 Esposizioni daVisitare = null;
+			
 			int dv = l.get((int)(Math.random()*10));
 			for (Esposizioni es: esposizioni) {
 				if (es.getId()==dv) {
@@ -65,7 +86,12 @@ public class Simulazione {
 			}
 			this.queue.add(new Evento(s,daVisitare));
 			
-		}
+			}catch (Exception ex ) {
+				System.out.println("non ha successori");
+			}
+			
+		*/
+		
 	      
 	
 	}

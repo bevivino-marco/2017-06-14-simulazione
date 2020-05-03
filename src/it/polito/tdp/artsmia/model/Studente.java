@@ -44,6 +44,10 @@ public class Studente {
 			return false;
 		return true;
 	}
+	@Override
+	public String toString() {
+		return String.format("Studente =%s\n lista=%s\n cont=%s;\n", id, lista, cont);
+	}
 	
 
 }

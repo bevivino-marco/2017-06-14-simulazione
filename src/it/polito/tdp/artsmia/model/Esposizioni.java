@@ -43,5 +43,9 @@ public boolean equals(Object obj) {
 		return false;
 	return true;
 }
+@Override
+public String toString() {
+	return String.format("Esposizione id=%s, num=%s\n", id, num);
+}
    
 }
