@@ -2,11 +2,8 @@ package it.polito.tdp.artsmia.model;
 
 import java.util.*;
 
-import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
-import org.jgrapht.Graphs;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
-import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleDirectedGraph;
 
@@ -16,7 +13,8 @@ public class Model {
 	private ArtsmiaDAO dao;
 	private SimpleDirectedGraph<Integer, DefaultEdge> grafo;
 	private List <Corrispondenza> listaC;
-	Map <Integer, Esposizioni> opere;
+	private Map <Integer, Esposizioni> opere;
+	private List<Integer> listaM;
 	public Model() {
 		dao = new ArtsmiaDAO ();
 	}
@@ -25,14 +23,15 @@ public class Model {
 	public void creaGrafo(int anno) {
 		grafo = new SimpleDirectedGraph<Integer,DefaultEdge> (DefaultEdge.class);
 		listaC = new LinkedList<Corrispondenza>(dao.getCorrispondenze(anno));
+		listaM = new LinkedList <Integer>();
+		listaM.addAll(dao.getMostre(anno));
+		for (int i : listaM) {
+			grafo.addVertex(i);
+		}
 		for (Corrispondenza c : listaC) {
-			if (!grafo.containsVertex(c.getA1())) {
-				grafo.addVertex(c.getA1());
-			}
-			if (!grafo.containsVertex(c.getA2())) {
-				grafo.addVertex(c.getA2());
-			}
-			if (!grafo.containsEdge(c.getA1(),c.getA2())) {
+//		       grafo.addVertex(c.getA1());
+//		       grafo.addVertex(c.getA2());
+			if (!grafo.containsEdge(c.getA1(),c.getA2()) && !grafo.containsEdge(c.getA2(),c.getA1())) {
 				grafo.addEdge(c.getA1(), c.getA2());
 			}
 		}
@@ -40,7 +39,10 @@ public class Model {
 		System.out.println("N. archi : "+grafo.edgeSet().size());
 		System.out.println(this.analizzaGrafo());
 		System.out.println(this.opereMax(anno));
-        
+//		System.out.println(grafo.edgeSet().toString());
+//		List<Esposizioni> espo = new LinkedList<Esposizioni>(opere.values());
+//		System.out.println(espo.toString());
+//System.out.println(Graphs.successorListOf(grafo, 161));
 		
 	}
 	public String opereMax(int anno) {

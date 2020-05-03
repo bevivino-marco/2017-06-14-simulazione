@@ -4,7 +4,7 @@ public class testModel {
 
 	public static void main(String[] args) {
 		Model m = new Model();
-		m.creaGrafo(2000);
+		m.creaGrafo(2006);
 		System.out.println(m.simula(4).toString());
 	}
 

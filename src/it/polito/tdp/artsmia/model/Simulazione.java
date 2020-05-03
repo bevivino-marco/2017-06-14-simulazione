@@ -33,13 +33,14 @@ public class Simulazione {
 			this.grafo = grafo;
 			this.N_STDENTI=n;
 			listaS = new LinkedList <>();
-			
+			System.out.println(esposizioni.get(52));
 			//impostazione dello stato iniziale
 			queue = new PriorityQueue<Evento>();
+			int rand = (int)(Math.random()*10+Math.random()*10);
 			for (int i = 0; i<this.N_STDENTI;i++) {
 				Studente s = new Studente (i);
 				listaS.add(s);
-				Evento e =new Evento(s, esposizioni.get(0),numero++);
+				Evento e =new Evento(s, esposizioni.get(rand),numero++);
 				queue.add(e);
 				
 			}
@@ -52,25 +53,29 @@ public class Simulazione {
 				//finchè la coda non si svuota
 		Evento e;
 		while((e = queue.poll()) != null){
+
 			Studente s = e.getStudente();
 			Esposizioni esp = e.getE();
 			s.visita(esp);
 			List <Integer> l = new LinkedList <Integer>();
 			l.addAll(Graphs.successorListOf(grafo, esp.getId()));
+			System.out.println("successori"+l.size()+"\n");
 			if (l.size()>0) {
 				Esposizioni daVisitare=null;
 				int dv = l.get((int)(Math.random()*10));
 				for (Esposizioni es: esposizioni) {
 					if (es.getId()==dv) {
 						daVisitare = es;
+						System.out.println(daVisitare+"\n");
+
 					}
 				}
 				if (daVisitare!= null) {
 					this.queue.add(new Evento(s,daVisitare, numero++));
+					
 				}
 			}
-			/*System.out.println(e.getStudente().getId()+"visita "+ e.getE()+"\n");
-			Studente s = e.getStudente();
+			/*Studente s = e.getStudente();
 			Esposizioni esp = e.getE();
 			s.visita(esp);
 			List<Integer> l;

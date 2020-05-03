@@ -72,11 +72,35 @@ public class ArtsmiaDAO {
 			return null;
 		}
 	}
+    public List <Integer> getMostre (int anno){
+    	String sql = "SELECT DISTINCT  e.exhibition_id AS id " + 
+    			"FROM exhibitions AS e " + 
+    			"WHERE e.begin>=?";
 
+		List<Integer> result = new LinkedList<>();
+
+		Connection conn = DBConnect.getConnection();
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+            st.setInt(1, anno);
+			ResultSet res = st.executeQuery();
+
+			while (res.next()) {
+				     result.add(res.getInt("id"));
+				}
+
+			conn.close();
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+    }
 	public List<Corrispondenza> getCorrispondenze(int anno) {
 		String sql = "SELECT  e1.exhibition_id , e2.exhibition_id " + 
 				"FROM exhibitions AS e1, exhibitions AS e2 " + 
-				"WHERE e1.exhibition_id!=e2.exhibition_id AND  e1.begin< e2.begin AND e2.begin<=e1.end AND e1.begin>=?";
+				"WHERE e1.exhibition_id!=e2.exhibition_id AND  e1.begin< e2.begin AND e2.begin<e1.end AND e2.begin>=? AND e1.begin>=?";
 
 		List<Corrispondenza> result = new LinkedList<>();
 
@@ -85,6 +109,7 @@ public class ArtsmiaDAO {
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
             st.setInt(1, anno);
+            st.setInt(2, anno);
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
