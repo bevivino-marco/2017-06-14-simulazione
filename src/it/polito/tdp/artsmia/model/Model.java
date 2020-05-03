@@ -53,8 +53,10 @@ public class Model {
 
 		this.getExhibitionsFromYear(year);
 		Graphs.addAllVertices(sdgraph, exhibitions);
-
+//        Exhibition ex = null;
 		for (Exhibition ex1 : exhibitions) {
+//			if (ex1.getId()==10)
+//				ex=ex1;
 			for (Exhibition ex2 : exhibitions) {
 				if (!ex1.equals(ex2)) {
 					if (ex1.getBeginYear() < ex2.getBeginYear() && ex1.getEndYear() > ex2.getBeginYear()) {
@@ -67,6 +69,7 @@ public class Model {
 		System.out.println("Grafo creato! (year: " + year + ")");
 		System.out.println("# Vertici: " + sdgraph.vertexSet().size());
 		System.out.println("# Archi: " + sdgraph.edgeSet().size());
+//		System.out.println(Graphs.successorListOf(sdgraph, ex));
 	}
 
 	public BiggestExhibition getBiggestExhibition(int year) {
