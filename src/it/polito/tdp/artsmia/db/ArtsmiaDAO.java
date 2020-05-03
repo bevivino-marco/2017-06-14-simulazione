@@ -104,7 +104,7 @@ public class ArtsmiaDAO {
 	public Map <Integer, Esposizioni> getNOpere(int anno) {
 		String sql = "SELECT eo.exhibition_id AS id , COUNT(object_id) AS c " + 
 				"FROM exhibition_objects AS eo , exhibitions AS e " + 
-				"WHERE eo.exhibition_id=e.exhibition_id AND e.`begin`=? " + 
+				"WHERE eo.exhibition_id=e.exhibition_id AND e.`begin`>=? " + 
 				"GROUP BY eo.exhibition_id";
 
 		Map <Integer, Esposizioni> opere = new HashMap <Integer, Esposizioni>();

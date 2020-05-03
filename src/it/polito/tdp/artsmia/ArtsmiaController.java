@@ -33,10 +33,13 @@ public class ArtsmiaController {
 
 	private Model model;
 
+	private boolean creato = false;
+
     @FXML
     void handleCreaGrafo(ActionEvent event) {
           if (boxAnno.getValue()!= null) {
         	  model.creaGrafo(boxAnno.getValue());
+        	  creato = true;
           }else {
         	  txtResult.appendText("selezionare un anno!!!!!\n");
           }
@@ -44,7 +47,16 @@ public class ArtsmiaController {
 
     @FXML
     void handleSimula(ActionEvent event) {
-
+          if (creato  == true ) {
+        	  try {
+        	  int n = Integer.parseInt(txtFieldStudenti.getText());
+        	  txtResult.appendText(model.simula(n).toString());
+        	  }catch (NumberFormatException e ) {
+        		  txtResult.appendText("inserire un numero intero di studenti");  
+        	  }
+          }else {
+        	  txtResult.appendText("creare il grafo prima!!!");
+          }
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete

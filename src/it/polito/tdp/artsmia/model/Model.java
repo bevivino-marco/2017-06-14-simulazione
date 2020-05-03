@@ -4,24 +4,26 @@ import java.util.*;
 
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
+import org.jgrapht.Graphs;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleDirectedGraph;
 
 import it.polito.tdp.artsmia.db.ArtsmiaDAO;
 
 public class Model {
 	private ArtsmiaDAO dao;
-	private Graph<Integer, DefaultEdge> grafo;
+	private SimpleDirectedGraph<Integer, DefaultEdge> grafo;
 	private List <Corrispondenza> listaC;
+	Map <Integer, Esposizioni> opere;
 	public Model() {
 		dao = new ArtsmiaDAO ();
 	}
 	
 	
 	public void creaGrafo(int anno) {
-		grafo = new DefaultDirectedGraph<Integer,DefaultEdge> (DefaultEdge.class);
+		grafo = new SimpleDirectedGraph<Integer,DefaultEdge> (DefaultEdge.class);
 		listaC = new LinkedList<Corrispondenza>(dao.getCorrispondenze(anno));
 		for (Corrispondenza c : listaC) {
 			if (!grafo.containsVertex(c.getA1())) {
@@ -38,13 +40,13 @@ public class Model {
 		System.out.println("N. archi : "+grafo.edgeSet().size());
 		System.out.println(this.analizzaGrafo());
 		System.out.println(this.opereMax(anno));
-
+        
 		
 	}
 	public String opereMax(int anno) {
 		int Max =0;
 		int id_Max =0;
-		Map <Integer, Esposizioni> opere = new HashMap <Integer, Esposizioni>(dao.getNOpere(anno));
+		opere = new HashMap <Integer, Esposizioni>(dao.getNOpere(anno));
 		
 		for (Esposizioni e : opere.values()) {
 			int cont =  e.getNum();
@@ -76,6 +78,14 @@ public class Model {
 	public List<Integer> getAnni() {
 		
 		return dao.getAnni();
+	}
+	public List <Studente> simula (int n){
+		Simulazione s = new Simulazione();
+		List <Esposizioni> esp = new LinkedList<>(opere.values());
+		s.init(grafo, esp, n);
+		s.run();
+		return s.getS();
+		
 	}
 
 }
