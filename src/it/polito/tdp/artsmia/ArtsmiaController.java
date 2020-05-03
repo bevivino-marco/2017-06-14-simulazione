@@ -35,7 +35,11 @@ public class ArtsmiaController {
 
     @FXML
     void handleCreaGrafo(ActionEvent event) {
-
+          if (boxAnno.getValue()!= null) {
+        	  model.creaGrafo(boxAnno.getValue());
+          }else {
+        	  txtResult.appendText("selezionare un anno!!!!!\n");
+          }
     }
 
     @FXML

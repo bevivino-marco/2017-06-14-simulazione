@@ -5,10 +5,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import it.polito.tdp.artsmia.model.ArtObject;
+import it.polito.tdp.artsmia.model.Corrispondenza;
+import it.polito.tdp.artsmia.model.Esposizioni;
 
 public class ArtsmiaDAO {
 
@@ -62,6 +67,63 @@ public class ArtsmiaDAO {
 
 			conn.close();
 			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public List<Corrispondenza> getCorrispondenze(int anno) {
+		String sql = "SELECT  e1.exhibition_id , e2.exhibition_id " + 
+				"FROM exhibitions AS e1, exhibitions AS e2 " + 
+				"WHERE e1.exhibition_id!=e2.exhibition_id AND  e1.begin< e2.begin AND e2.begin<=e1.end AND e1.begin>=?";
+
+		List<Corrispondenza> result = new LinkedList<>();
+
+		Connection conn = DBConnect.getConnection();
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+            st.setInt(1, anno);
+			ResultSet res = st.executeQuery();
+
+			while (res.next()) {
+				     Corrispondenza c = new Corrispondenza (res.getInt("e1.exhibition_id")
+				    		 , res.getInt("e2.exhibition_id"));
+				     result.add(c);
+				}
+
+			conn.close();
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public Map <Integer, Esposizioni> getNOpere(int anno) {
+		String sql = "SELECT eo.exhibition_id AS id , COUNT(object_id) AS c " + 
+				"FROM exhibition_objects AS eo , exhibitions AS e " + 
+				"WHERE eo.exhibition_id=e.exhibition_id AND e.`begin`=? " + 
+				"GROUP BY eo.exhibition_id";
+
+		Map <Integer, Esposizioni> opere = new HashMap <Integer, Esposizioni>();
+
+		Connection conn = DBConnect.getConnection();
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+            st.setInt(1, anno);
+			ResultSet res = st.executeQuery();
+
+			while (res.next()) {
+				    Esposizioni e = new Esposizioni (res.getInt("id"), res.getInt("c"));
+				    opere.put(res.getInt("id"), e);
+				}
+			conn.close();
+	        return opere;
+			
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
