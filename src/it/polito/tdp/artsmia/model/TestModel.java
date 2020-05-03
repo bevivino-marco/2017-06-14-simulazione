@@ -8,7 +8,7 @@ public class TestModel {
 
 	public static void main(String[] args) {
 
-		final int year = 2030;
+		final int year = 2000;
 
 		try {
 			System.out.println("Test Model!");
@@ -21,7 +21,7 @@ public class TestModel {
 			System.out.println(testModel.getBiggestExhibition(year));
 
 			Simulazione simula = new Simulazione(testModel);
-			simula.Simula(10, year);
+			simula.Simula(4, year);
 
 			List<Studente> simulationResult = simula.getResults();
 			System.out.println(simulationResult);
